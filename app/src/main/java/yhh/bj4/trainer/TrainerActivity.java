@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import yhh.bj4.trainer.firebase.FirebaseUtilities;
 
-public class TrainerActivity extends AppCompatActivity {
+public class TrainerActivity extends TransparentActivity {
     private static final boolean DEBUG = true;
     private static final String TAG = "QQQQ";
 
