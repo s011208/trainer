@@ -34,6 +34,10 @@ public class TimerListFragment extends Fragment {
     private static final String TIME_MINUTE = "m";
     private static final String TIME_SECOND = "s";
 
+    private static final String LAP_TIME_HOUR = "lh";
+    private static final String LAP_IME_MINUTE = "lm";
+    private static final String LAP_TIME_SECOND = "ls";
+
     private static final String TIME_LAP_DATA = "time_lap_data";
 
     private int mTimerState = TIMER_STATE_NONE;
@@ -65,6 +69,9 @@ public class TimerListFragment extends Fragment {
         outState.putInt(TIME_MINUTE, mMinute);
         outState.putInt(TIME_SECOND, mSecond);
         outState.putInt(TIMER_STATE, mTimerState);
+        outState.putInt(LAP_TIME_HOUR, mLapHour);
+        outState.putInt(LAP_IME_MINUTE, mLapMinute);
+        outState.putInt(LAP_TIME_SECOND, mLapSecond);
 
         ArrayList<TimerListData> data = mTimerListAdapter.getData();
         if (!data.isEmpty()) {
@@ -90,6 +97,10 @@ public class TimerListFragment extends Fragment {
         mHour = savedInstanceState.getInt(TIME_HOUR, 0);
         mMinute = savedInstanceState.getInt(TIME_MINUTE, 0);
         mSecond = savedInstanceState.getInt(TIME_SECOND, 0);
+
+        mLapHour = savedInstanceState.getInt(LAP_TIME_HOUR, 0);
+        mLapMinute = savedInstanceState.getInt(LAP_IME_MINUTE, 0);
+        mLapSecond = savedInstanceState.getInt(LAP_TIME_SECOND, 0);
         updateTimerUi();
         mTimerState = savedInstanceState.getInt(TIMER_STATE, TIMER_STATE_NONE);
         switch (mTimerState) {
@@ -177,6 +188,7 @@ public class TimerListFragment extends Fragment {
 
     private void resetSecond() {
         mSecond = mMinute = mHour = 0;
+        mLapHour = mLapMinute = mLapSecond = 0;
         updateTimerUi();
     }
 
