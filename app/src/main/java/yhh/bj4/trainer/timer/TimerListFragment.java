@@ -17,13 +17,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import yhh.bj4.trainer.R;
+import yhh.bj4.trainer.Utilities;
 
 /**
  * Created by Yen-Hsun_Huang on 2016/4/18.
  */
 public class TimerListFragment extends Fragment {
     private static final String TAG = "TimerListFragment";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = Utilities.DEBUG;
 
     private static final String TIMER_STATE = "timer_state";
     private static final int TIMER_STATE_NONE = 0;
