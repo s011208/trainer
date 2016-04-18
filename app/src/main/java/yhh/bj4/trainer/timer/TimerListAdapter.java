@@ -24,6 +24,20 @@ public class TimerListAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
     }
 
+    public void setCurrentTimer(int hour, int minute, int second) {
+        if (mData.isEmpty()) return;
+        mData.get(0).setStopHour(hour);
+        mData.get(0).setStopMinute(minute);
+        mData.get(0).setStopSecond(second);
+    }
+
+    public void setLapTimer(int h, int m, int s) {
+        if (mData.isEmpty()) return;
+        mData.get(0).setLapHour(h);
+        mData.get(0).setLapMinute(m);
+        mData.get(0).setLapSecond(s);
+    }
+
     public void setData(ArrayList<TimerListData> data) {
         mData.clear();
         mData.addAll(data);
@@ -59,9 +73,9 @@ public class TimerListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.timer_list_row, null);
             holder.mLap = (TextView) convertView.findViewById(R.id.lap);
-            holder.mLapHour = (TextView) convertView.findViewById(R.id.lap_second);
+            holder.mLapHour = (TextView) convertView.findViewById(R.id.lap_hour);
             holder.mLapMinute = (TextView) convertView.findViewById(R.id.lap_minute);
-            holder.mLapSecond = (TextView) convertView.findViewById(R.id.lap_hour);
+            holder.mLapSecond = (TextView) convertView.findViewById(R.id.lap_second);
             holder.mStopHour = (TextView) convertView.findViewById(R.id.stop_hour);
             holder.mStopMinute = (TextView) convertView.findViewById(R.id.stop_minute);
             holder.mStopSecond = (TextView) convertView.findViewById(R.id.stop_second);

@@ -47,6 +47,7 @@ public class TimerListFragment extends Fragment {
     private TimerListAdapter mTimerListAdapter;
 
     private int mHour, mMinute, mSecond;
+    private int mLapHour, mLapMinute, mLapSecond;
     private TimerTask mTimerTask;
     private Timer mTimer;
 
@@ -136,6 +137,18 @@ public class TimerListFragment extends Fragment {
             ++mHour;
         }
 
+        if (!mTimerListAdapter.isEmpty()) {
+            ++mLapSecond;
+            if (mLapSecond == 60) {
+                mLapSecond = 0;
+                ++mLapMinute;
+            }
+            if (mLapMinute == 60) {
+                mLapMinute = 0;
+                ++mLapHour;
+            }
+        }
+
         updateTimerUi();
     }
 
@@ -145,12 +158,19 @@ public class TimerListFragment extends Fragment {
         final int second = mSecond;
         final int minute = mMinute;
         final int hour = mHour;
+
+        final int lapSecond = mLapSecond;
+        final int lapMinute = mLapMinute;
+        final int lapHour = mLapHour;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mTotalHourView.setText(hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour));
-                mTotalMinuteView.setText(mMinute < 10 ? "0" + String.valueOf(mMinute) : String.valueOf(mMinute));
-                mTotalSecondView.setText(mSecond < 10 ? "0" + String.valueOf(mSecond) : String.valueOf(mSecond));
+                mTotalMinuteView.setText(mMinute < 10 ? "0" + String.valueOf(minute) : String.valueOf(minute));
+                mTotalSecondView.setText(mSecond < 10 ? "0" + String.valueOf(second) : String.valueOf(second));
+                mTimerListAdapter.setCurrentTimer(hour, minute, second);
+                mTimerListAdapter.setLapTimer(lapHour, lapMinute, lapSecond);
+                mTimerListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -167,6 +187,7 @@ public class TimerListFragment extends Fragment {
     }
 
     private void lapTimer() {
+        mLapHour = mLapMinute = mLapSecond = 0;
     }
 
     private void stopTimer() {

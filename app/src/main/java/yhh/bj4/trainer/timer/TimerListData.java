@@ -59,6 +59,18 @@ public class TimerListData {
         mLapSecond = s;
     }
 
+    public void setStopHour(int h) {
+        mStopHour = h;
+    }
+
+    public void setStopMinute(int m) {
+        mStopMinute = m;
+    }
+
+    public void setStopSecond(int s) {
+        mStopSecond = s;
+    }
+
     public TimerListData(int lap, int stopHour, int stopMinute, int stopSecond) {
         mLap = lap;
         mStopHour = stopHour;
