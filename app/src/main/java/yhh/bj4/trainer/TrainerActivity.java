@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import yhh.bj4.trainer.firebase.FirebaseUtilities;
 import yhh.bj4.trainer.timer.NumericTimerFragment;
+import yhh.bj4.trainer.timer.TimerListFragment;
 
 public class TrainerActivity extends TransparentActivity {
     private static final boolean DEBUG = true;
@@ -20,6 +21,6 @@ public class TrainerActivity extends TransparentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trainer);
-        getFragmentManager().beginTransaction().replace(R.id.container, new NumericTimerFragment()).commitAllowingStateLoss();
+        getFragmentManager().beginTransaction().replace(R.id.container, new TimerListFragment()).commitAllowingStateLoss();
     }
 }

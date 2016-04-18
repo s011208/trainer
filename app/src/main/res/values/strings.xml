@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">trainer</string>
+    <string name="timer_list_fragment_button_stop">Stop</string>
+    <string name="timer_list_fragment_button_lap">Lap</string>
+    <string name="timer_list_fragment_button_start">Start</string>
+    <string name="timer_list_fragment_button_reset">Reset</string>
 </resources>

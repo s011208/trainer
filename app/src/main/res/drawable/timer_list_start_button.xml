@@ -1,0 +1,10 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/colorPrimary" />
+    <corners
+        android:bottomLeftRadius="@dimen/timer_list_fragment_button_switcher_button_corner"
+        android:bottomRightRadius="@dimen/timer_list_fragment_button_switcher_button_corner"
+        android:topLeftRadius="@dimen/timer_list_fragment_button_switcher_button_corner"
+        android:topRightRadius="@dimen/timer_list_fragment_button_switcher_button_corner" />
+</shape>

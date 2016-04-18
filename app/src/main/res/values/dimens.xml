@@ -2,4 +2,14 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- timer list fragment-->
+    <dimen name="timer_list_fragment_total_timer_container_item_padding_h">3dp</dimen>
+    <dimen name="timer_list_fragment_total_timer_container_text_size">70dp</dimen>
+    <dimen name="timer_list_fragment_button_switcher_margin_top">15dp</dimen>
+    <dimen name="timer_list_fragment_button_switcher_text_size">18sp</dimen>
+    <dimen name="timer_list_fragment_button_switcher_button_corner">10dp</dimen>
+    <dimen name="timer_list_fragment_button_switcher_button_margin">10dp</dimen>
+    <dimen name="timer_list_fragment_button_switcher_text_vertical_padding">5dp</dimen>
+    <dimen name="timer_list_fragment_lap_listview_margin_top">15dp</dimen>
 </resources>
