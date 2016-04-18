@@ -15,6 +15,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            name "jcenter"
+            url "http://jcenter.bintray.com/"
+        }
     }
 }
 
