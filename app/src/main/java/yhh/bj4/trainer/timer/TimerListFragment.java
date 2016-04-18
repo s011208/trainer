@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,6 +34,8 @@ public class TimerListFragment extends Fragment {
     private static final String TIME_MINUTE = "m";
     private static final String TIME_SECOND = "s";
 
+    private static final String TIME_LAP_DATA = "time_lap_data";
+
     private int mTimerState = TIMER_STATE_NONE;
 
     private View mRoot;
@@ -40,6 +43,8 @@ public class TimerListFragment extends Fragment {
     private ViewSwitcher mButtonSwitcher;
     private TextView mStart, mReset, mStop, mLap;
     private ListView mTimerListView;
+
+    private TimerListAdapter mTimerListAdapter;
 
     private int mHour, mMinute, mSecond;
     private TimerTask mTimerTask;
@@ -59,6 +64,15 @@ public class TimerListFragment extends Fragment {
         outState.putInt(TIME_MINUTE, mMinute);
         outState.putInt(TIME_SECOND, mSecond);
         outState.putInt(TIMER_STATE, mTimerState);
+
+        ArrayList<TimerListData> data = mTimerListAdapter.getData();
+        if (!data.isEmpty()) {
+            ArrayList<String> jsonData = new ArrayList<>();
+            for (TimerListData d : data) {
+                jsonData.add(d.toJson().toString());
+            }
+            outState.putStringArrayList(TIME_LAP_DATA, jsonData);
+        }
         super.onSaveInstanceState(outState);
         if (DEBUG) {
             Log.d(TAG, "onSaveInstanceState");
@@ -89,6 +103,15 @@ public class TimerListFragment extends Fragment {
                 mButtonSwitcher.setDisplayedChild(0);
                 mReset.setVisibility(View.VISIBLE);
                 break;
+        }
+        ArrayList<String> jsonData = savedInstanceState.getStringArrayList(TIME_LAP_DATA);
+        if (jsonData != null) {
+            ArrayList<TimerListData> data = new ArrayList<>();
+            for (String json : jsonData) {
+                data.add(new TimerListData((json)));
+            }
+            mTimerListAdapter.setData(data);
+            mTimerListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -177,7 +200,8 @@ public class TimerListFragment extends Fragment {
             public void onClick(View v) {
                 mReset.setVisibility(View.GONE);
                 resetTimer();
-                // TODO remove all list data
+                mTimerListAdapter.setData(new ArrayList<TimerListData>());
+                mTimerListAdapter.notifyDataSetChanged();
             }
         });
         mStop = (TextView) root.findViewById(R.id.stop);
@@ -193,12 +217,15 @@ public class TimerListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 lapTimer();
-                // TODO add list data
+                mTimerListAdapter.addData(new TimerListData(mTimerListAdapter.getData().size() + 1, mHour, mMinute, mSecond));
+                mTimerListAdapter.notifyDataSetChanged();
             }
         });
         mReset.setVisibility(View.GONE);
 
         mTimerListView = (ListView) root.findViewById(R.id.lap_listview);
+        mTimerListAdapter = new TimerListAdapter(getActivity());
+        mTimerListView.setAdapter(mTimerListAdapter);
     }
 
     @Nullable

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/timer_list_adapter_horizontal_padding"
+    android:paddingRight="@dimen/timer_list_adapter_horizontal_padding">
+
+    <TextView
+        android:id="@+id/lap"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/stop_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/timer_list_adapter_stop_hour_margin_left"
+        android:layout_toRightOf="@+id/lap"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/split1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_toRightOf="@+id/stop_hour"
+        android:gravity="center_vertical"
+        android:text=":"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/stop_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/split1"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/split2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_toRightOf="@+id/stop_minute"
+        android:gravity="center_vertical"
+        android:text=":"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/stop_second"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/split2"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_small_text_size" />
+
+    <TextView
+        android:id="@+id/lap_second"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_large_text_size" />
+
+    <TextView
+        android:id="@+id/split3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_toLeftOf="@+id/lap_second"
+        android:gravity="center_vertical"
+        android:text=":"
+        android:textSize="@dimen/timer_list_adapter_large_text_size" />
+
+    <TextView
+        android:id="@+id/lap_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/split3"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_large_text_size" />
+
+    <TextView
+        android:id="@+id/split4"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_toLeftOf="@+id/lap_minute"
+        android:gravity="center_vertical"
+        android:text=":"
+        android:textSize="@dimen/timer_list_adapter_large_text_size" />
+
+    <TextView
+        android:id="@+id/lap_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/split4"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/timer_list_adapter_large_text_size" />
+
+</RelativeLayout>

@@ -4,4 +4,5 @@
     <string name="timer_list_fragment_button_lap">Lap</string>
     <string name="timer_list_fragment_button_start">Start</string>
     <string name="timer_list_fragment_button_reset">Reset</string>
+    <string name="timer_list_adapter_lap">Lap %s</string>
 </resources>

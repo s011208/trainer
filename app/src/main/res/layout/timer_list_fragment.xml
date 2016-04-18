@@ -154,5 +154,6 @@
         android:layout_below="@+id/button_switcher"
         android:layout_marginTop="@dimen/timer_list_fragment_lap_listview_margin_top"
         android:divider="#ffaaaaaa"
+        android:minHeight="?android:attr/listPreferredItemHeight"
         android:dividerHeight="1dp"></ListView>
 </RelativeLayout>

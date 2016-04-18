@@ -12,4 +12,8 @@
     <dimen name="timer_list_fragment_button_switcher_button_margin">10dp</dimen>
     <dimen name="timer_list_fragment_button_switcher_text_vertical_padding">5dp</dimen>
     <dimen name="timer_list_fragment_lap_listview_margin_top">15dp</dimen>
+    <dimen name="timer_list_adapter_horizontal_padding">4dp</dimen>
+    <dimen name="timer_list_adapter_small_text_size">18sp</dimen>
+    <dimen name="timer_list_adapter_stop_hour_margin_left">10dp</dimen>
+    <dimen name="timer_list_adapter_large_text_size">30sp</dimen>
 </resources>
