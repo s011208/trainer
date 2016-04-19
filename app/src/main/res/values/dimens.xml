@@ -6,6 +6,7 @@
     <!-- Trainer activity-->
     <dimen name="trainer_activity_top_tab_container_height">60dp</dimen>
     <dimen name="trainer_activity_top_tab_container_padding_bottom">4dp</dimen>
+    <dimen name="trainer_activity_top_tab_item_margin">10dp</dimen>
 
     <!-- timer list fragment-->
     <dimen name="timer_list_fragment_total_timer_container_item_padding_h">3dp</dimen>

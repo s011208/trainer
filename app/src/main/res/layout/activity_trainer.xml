@@ -18,36 +18,31 @@
         android:paddingBottom="@dimen/trainer_activity_top_tab_container_padding_bottom">
 
         <ImageView
-            android:id="@+id/timer1"
+            android:id="@+id/pager_schedule"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_margin="@dimen/trainer_activity_top_tab_item_margin"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_walk_black_48dp" />
 
         <ImageView
-            android:id="@+id/timer2"
+            android:id="@+id/pager_calendar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_margin="@dimen/trainer_activity_top_tab_item_margin"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_calendar_black_48dp" />
 
         <ImageView
-            android:id="@+id/timer3"
+            android:id="@+id/pager_timer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_margin="@dimen/trainer_activity_top_tab_item_margin"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/timer4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_clock_fast_black_48dp" />
     </yhh.bj4.trainer.TrainerActivityTabLayout>
 
 
