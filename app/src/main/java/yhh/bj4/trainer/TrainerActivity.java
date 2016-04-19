@@ -1,16 +1,8 @@
 package yhh.bj4.trainer;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import yhh.bj4.trainer.timer.TimerListFragment;
+import android.util.Log;
 
 public class TrainerActivity extends TransparentActivity {
     private static final boolean DEBUG = Utilities.DEBUG;
@@ -18,6 +10,7 @@ public class TrainerActivity extends TransparentActivity {
 
     private ViewPager mViewPager;
     private TrainerPagerAdapter mPagerAdapter;
+    private TrainerActivityTabLayout mTopTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,45 +28,25 @@ public class TrainerActivity extends TransparentActivity {
 
     private void initComponents() {
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.d("QQQQ", "position: " + position + ", positionOffset: " + positionOffset + ", positionOffsetPixels: " + positionOffsetPixels);
+                mTopTabLayout.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mPagerAdapter = new TrainerPagerAdapter(TrainerActivity.this);
         mViewPager.setAdapter(mPagerAdapter);
-    }
-
-    private static class TrainerPagerAdapter extends PagerAdapter {
-        private Activity mActivity;
-
-        public TrainerPagerAdapter(Activity activity) {
-            mActivity = activity;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "hi" + position;
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            FrameLayout root = new FrameLayout(mActivity);
-            root.setId(position + 1);
-            mActivity.getFragmentManager().beginTransaction().replace(root.getId(), new TimerListFragment()).commitAllowingStateLoss();
-            container.addView(root);
-            return root;
-        }
-
-        @Override
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            return arg0 == arg1;
-        }
+        mTopTabLayout = (TrainerActivityTabLayout) findViewById(R.id.top_tab_container);
     }
 }
