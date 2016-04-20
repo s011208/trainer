@@ -49,8 +49,9 @@ public class TrainerActivity extends TransparentActivity {
                 mTopTabLayout.onPageScrollStateChanged(state);
             }
         });
-        mPagerAdapter = new TrainerPagerAdapter(TrainerActivity.this);
+        mPagerAdapter = new TrainerPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
         mSchedule = (ImageView) findViewById(R.id.pager_schedule);
         mSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
