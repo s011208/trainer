@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
  * Created by Yen-Hsun_Huang on 2016/4/19.
  */
 public class TrainerActivityTabLayout extends LinearLayout {
+    private static final boolean DELAY_POST_POSITION = false;
     private static final int POST_TIME = 30;
 
     private final Paint mPagePaint = new Paint();
@@ -63,15 +64,21 @@ public class TrainerActivityTabLayout extends LinearLayout {
         }
         mCurrentPosition = position;
         mCurrentPositionOffset = positionOffset;
+
+        if (DELAY_POST_POSITION) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPostPosition = position;
+                    mPostPositionOffset = positionOffset;
+                    invalidate();
+                }
+            }, POST_TIME);
+        } else {
+            mPostPosition = position;
+            mPostPositionOffset = positionOffset;
+        }
         invalidate();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPostPosition = position;
-                mPostPositionOffset = positionOffset;
-                invalidate();
-            }
-        }, POST_TIME);
     }
 
     public void onPageScrollStateChanged(int state) {
