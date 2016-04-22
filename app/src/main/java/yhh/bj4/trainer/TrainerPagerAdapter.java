@@ -1,6 +1,5 @@
 package yhh.bj4.trainer;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
@@ -11,7 +10,7 @@ import yhh.bj4.trainer.timer.TimerListFragment;
  * Created by Yen-Hsun_Huang on 2016/4/19.
  */
 public class TrainerPagerAdapter extends FragmentStatePagerAdapter {
-    private Fragment[] mFragments = new Fragment[3];
+    private ViewPagerCallbackFragment[] mFragments = new ViewPagerCallbackFragment[3];
 
     public TrainerPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,7 +25,7 @@ public class TrainerPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public ViewPagerCallbackFragment getItem(int position) {
         return mFragments[position];
     }
 }

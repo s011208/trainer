@@ -3,7 +3,6 @@ package yhh.bj4.trainer.calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +12,17 @@ import android.widget.ListView;
 
 import yhh.bj4.trainer.R;
 import yhh.bj4.trainer.Utilities;
+import yhh.bj4.trainer.ViewPagerCallbackFragment;
 
 /**
  * Created by User on 2016/4/18.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends ViewPagerCallbackFragment {
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final String TAG = "CalendarFragment";
+
+    private static final int ANIMATION_FLOATING_ACTION_BUTTON_DISTANCE = 150;
+    private static final int ANIMATION_FLOATING_ACTION_BUTTON_DUFATION = 250;
 
     private View mRoot;
     private CalendarView mCalendarView;
@@ -57,5 +60,17 @@ public class CalendarFragment extends Fragment {
                 if (DEBUG) Log.d(TAG, "click add schedule");
             }
         });
+        mAddSchedule.setTranslationY(ANIMATION_FLOATING_ACTION_BUTTON_DISTANCE);
+    }
+
+    @Override
+    public void onVisible() {
+        if (mAddSchedule != null) {
+            mAddSchedule.animate().translationY(0).setDuration(ANIMATION_FLOATING_ACTION_BUTTON_DUFATION).start();
+        }
+    }
+
+    @Override
+    public void onInVisible() {
     }
 }

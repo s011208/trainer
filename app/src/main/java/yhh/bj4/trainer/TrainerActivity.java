@@ -16,6 +16,8 @@ public class TrainerActivity extends TransparentActivity {
 
     private ImageView mSchedule, mCalendar, mTimer;
 
+    private int mCurrentPagerItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,10 @@ public class TrainerActivity extends TransparentActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                if (mCurrentPagerItem == position) return;
+                mPagerAdapter.getItem(position).onVisible();
+                mPagerAdapter.getItem(mCurrentPagerItem).onVisible();
+                mCurrentPagerItem = position;
             }
 
             @Override
@@ -52,6 +57,7 @@ public class TrainerActivity extends TransparentActivity {
         mPagerAdapter = new TrainerPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
+        mCurrentPagerItem = mViewPager.getCurrentItem();
         mSchedule = (ImageView) findViewById(R.id.pager_schedule);
         mSchedule.setOnClickListener(new View.OnClickListener() {
             @Override

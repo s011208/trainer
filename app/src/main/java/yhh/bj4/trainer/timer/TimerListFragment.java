@@ -18,11 +18,12 @@ import java.util.TimerTask;
 
 import yhh.bj4.trainer.R;
 import yhh.bj4.trainer.Utilities;
+import yhh.bj4.trainer.ViewPagerCallbackFragment;
 
 /**
  * Created by Yen-Hsun_Huang on 2016/4/18.
  */
-public class TimerListFragment extends Fragment {
+public class TimerListFragment extends ViewPagerCallbackFragment {
     private static final String TAG = "TimerListFragment";
     private static final boolean DEBUG = Utilities.DEBUG;
 
@@ -271,5 +272,15 @@ public class TimerListFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.timer_list_fragment, null);
         initComponents(mRoot);
         return mRoot;
+    }
+
+    @Override
+    public void onVisible() {
+
+    }
+
+    @Override
+    public void onInVisible() {
+
     }
 }
