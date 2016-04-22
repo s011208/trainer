@@ -5,4 +5,10 @@
     <string name="timer_list_fragment_button_start">Start</string>
     <string name="timer_list_fragment_button_reset">Reset</string>
     <string name="timer_list_adapter_lap">Lap %s</string>
+
+    <string name="dialog_add_schedule_content_training_item">Training item</string>
+    <string name="dialog_add_schedule_content_training_strength">Training intensity</string>
+    <string name="dialog_add_schedule_content_training_strength_unit">Unit (kg, lb)</string>
+    <string name="dialog_add_schedule_content_training_times">Training times</string>
+    <string name="dialog_add_schedule_content_training_times_unit">Unit (minutes)</string>
 </resources>

@@ -84,13 +84,13 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
                 dialog.show(getFragmentManager(), AddScheduleDialogFragment.class.getName());
             }
         });
-        mAddSchedule.setTranslationY(ANIMATION_FLOATING_ACTION_BUTTON_DISTANCE);
+//        mAddSchedule.setTranslationY(ANIMATION_FLOATING_ACTION_BUTTON_DISTANCE);
     }
 
     @Override
     public void onVisible() {
         if (mAddSchedule != null) {
-            mAddSchedule.animate().translationY(0).setDuration(ANIMATION_FLOATING_ACTION_BUTTON_DURATION).start();
+//            mAddSchedule.animate().translationY(0).setDuration(ANIMATION_FLOATING_ACTION_BUTTON_DURATION).start();
         }
     }
 

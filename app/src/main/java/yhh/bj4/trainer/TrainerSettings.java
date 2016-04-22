@@ -1,5 +1,7 @@
 package yhh.bj4.trainer;
 
+import android.net.Uri;
+
 /**
  * Created by Yen-Hsun_Huang on 2016/4/22.
  */
@@ -13,6 +15,10 @@ public class TrainerSettings {
     }
 
     public static class CalendarSettings extends BaseSettings {
+        public static final Uri getUri(boolean notify) {
+            return Uri.parse("content://" + PROVIDER_AUTHORITY + "/" + MATCHER_PATTERN + "?" + PARAMETER_NOTIFY + "=" + notify);
+        }
+
         public static final String TABLE_CALENDAR_SETTINGS = "calendar_settings";
 
         public static final String MATCHER_PATTERN = TABLE_CALENDAR_SETTINGS;
@@ -24,6 +30,10 @@ public class TrainerSettings {
     }
 
     public static class TrainingDataSettings extends BaseSettings {
+        public static final Uri getUri(boolean notify) {
+            return Uri.parse("content://" + PROVIDER_AUTHORITY + "/" + MATCHER_PATTERN + "?" + PARAMETER_NOTIFY + "=" + notify);
+        }
+
         public static final String TABLE_TRAINING_DATA_SETTINGS = "training_data_settings";
 
         public static final String MATCHER_PATTERN = TABLE_TRAINING_DATA_SETTINGS;

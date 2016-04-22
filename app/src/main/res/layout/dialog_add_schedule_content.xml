@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <yhh.bj4.trainer.views.AutoShowRecommendTextView
+            android:id="@+id/train_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="@string/dialog_add_schedule_content_training_item"
+            android:lines="1"
+            android:maxLines="2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <yhh.bj4.trainer.views.AutoShowRecommendTextView
+                android:id="@+id/train_strength"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/dialog_add_schedule_content_training_strength"
+                android:lines="1"
+                android:maxLines="2" />
+
+            <yhh.bj4.trainer.views.AutoShowRecommendTextView
+                android:id="@+id/train_strength_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/dialog_add_schedule_content_training_strength_unit"
+                android:lines="1"
+                android:maxLines="2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <yhh.bj4.trainer.views.AutoShowRecommendTextView
+                android:id="@+id/train_times"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/dialog_add_schedule_content_training_times"
+                android:lines="1"
+                android:maxLines="2" />
+
+            <yhh.bj4.trainer.views.AutoShowRecommendTextView
+                android:id="@+id/train_times_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/dialog_add_schedule_content_training_times_unit"
+                android:lines="1"
+                android:maxLines="2" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
