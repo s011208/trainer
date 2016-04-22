@@ -1,6 +1,7 @@
 package yhh.bj4.trainer;
 
 import android.app.Application;
+import android.net.Uri;
 
 import com.firebase.client.Firebase;
 
