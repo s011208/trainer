@@ -27,4 +27,9 @@
     <dimen name="floating_action_button_elevation">6dp</dimen>
     <dimen name="floating_action_button_press_z">12dp</dimen>
 
+    <!-- add schedule dialog fragment-->
+    <dimen name="add_schedule_dialog_fragment_title_horizontal_margin">8dp</dimen>
+    <dimen name="add_schedule_dialog_fragment_title_height">48dp</dimen>
+    <dimen name="add_schedule_dialog_fragment_title_icon_padding">10dp</dimen>
+
 </resources>

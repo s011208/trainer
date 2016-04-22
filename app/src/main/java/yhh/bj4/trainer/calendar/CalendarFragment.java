@@ -56,7 +56,7 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
                     Log.d(TAG, "y: " + year + ", m: " + month + ", d: " + dayOfMonth);
                 }
                 mSelectedYear = year;
-                mSelectedMonth = month;
+                mSelectedMonth = month + 1;
                 mSelectedDayOfMonth = dayOfMonth;
             }
         });
