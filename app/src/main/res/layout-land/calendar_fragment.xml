@@ -8,13 +8,13 @@
         android:id="@+id/calendar_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"></CalendarView>
+        android:layout_weight="2"></CalendarView>
 
     <ListView
         android:id="@+id/calendar_plan"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:divider="#ffaaaaaa"
         android:dividerHeight="1dp"
         android:minHeight="?android:attr/listPreferredItemHeight"></ListView>
