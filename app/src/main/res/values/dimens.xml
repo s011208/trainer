@@ -21,4 +21,10 @@
     <dimen name="timer_list_adapter_small_text_size">18sp</dimen>
     <dimen name="timer_list_adapter_stop_hour_margin_left">10dp</dimen>
     <dimen name="timer_list_adapter_large_text_size">30sp</dimen>
+
+    <!-- floating action button-->
+    <dimen name="floating_action_button_margin">16dp</dimen>
+    <dimen name="floating_action_button_elevation">6dp</dimen>
+    <dimen name="floating_action_button_press_z">12dp</dimen>
+
 </resources>

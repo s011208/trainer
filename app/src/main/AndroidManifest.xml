@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="yhh.bj4.trainer">
 
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21"></uses-sdk>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application

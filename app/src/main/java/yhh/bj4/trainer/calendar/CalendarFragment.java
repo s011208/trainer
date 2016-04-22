@@ -2,6 +2,7 @@ package yhh.bj4.trainer.calendar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ public class CalendarFragment extends Fragment {
     private View mRoot;
     private CalendarView mCalendarView;
     private ListView mScheduleList;
+    private FloatingActionButton mAddSchedule;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,5 +50,12 @@ public class CalendarFragment extends Fragment {
             }
         });
         mScheduleList = (ListView) mRoot.findViewById(R.id.calendar_plan);
+        mAddSchedule = (FloatingActionButton) mRoot.findViewById(R.id.add_schedule);
+        mAddSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DEBUG) Log.d(TAG, "click add schedule");
+            }
+        });
     }
 }
