@@ -11,4 +11,6 @@
     <string name="dialog_add_schedule_content_training_strength_unit">Unit (kg, lb)</string>
     <string name="dialog_add_schedule_content_training_times">Training times</string>
     <string name="dialog_add_schedule_content_training_times_unit">Unit (minutes)</string>
+
+    <string name="dialog_add_schedule_content_add_failed">Wrong data</string>
 </resources>

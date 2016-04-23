@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import yhh.bj4.trainer.Utilities;
  * Created by Yen-Hsun_Huang on 2016/4/22.
  */
 public class AddScheduleDialogFragment extends DialogFragment {
+
     private static final String TAG = "AddScheduleDialog";
     private static final boolean DEBUG = Utilities.DEBUG;
 
@@ -67,7 +70,12 @@ public class AddScheduleDialogFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        saveTrainingData();
+                        if (saveTrainingData()) {
+                            getTargetFragment().onActivityResult(
+                                    getTargetRequestCode(), Activity.RESULT_OK, null);
+                        } else {
+                            Toast.makeText(getActivity(), R.string.dialog_add_schedule_content_add_failed, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -87,12 +95,15 @@ public class AddScheduleDialogFragment extends DialogFragment {
         super.onAttach(activity);
     }
 
-    private void saveTrainingData() {
+    private boolean saveTrainingData() {
         if (DEBUG) {
             Log.d(TAG, mScheduleYear + "-" + mScheduleMonth + "-" + mScheduleDayOfMonth + "\n"
                     + "item: " + mTrainingItem.getText() + "\n"
                     + "intensity: " + mTrainingStrength.getText() + ", unit: " + mTrainingStrengthUnit.getText() + "\n"
                     + "times: " + mTrainingTimes.getText() + ", unit: " + mTrainingTimesUnit.getText());
+        }
+        if (TextUtils.isEmpty(mTrainingItem.getText())) {
+            return false;
         }
         ContentValues cv = new ContentValues();
         cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME, mTrainingItem.getText().toString());
@@ -112,6 +123,7 @@ public class AddScheduleDialogFragment extends DialogFragment {
         cv.put(TrainerSettings.CalendarSettings.COLUMN_MONTH, mScheduleMonth);
         cv.put(TrainerSettings.CalendarSettings.COLUMN_DAY_OF_MONTH, mScheduleDayOfMonth);
         getActivity().getContentResolver().insert(TrainerSettings.CalendarSettings.getUri(true), cv);
+        return true;
     }
 
     private View getCustomContent(LayoutInflater inflater) {

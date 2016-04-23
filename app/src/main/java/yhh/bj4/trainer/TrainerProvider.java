@@ -141,10 +141,10 @@ public class TrainerProvider extends ContentProvider {
                 + TrainerSettings.TrainingDataSettings.TABLE_TRAINING_DATA_SETTINGS + " ("
                 + TrainerSettings.TrainingDataSettings.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME + " TEXT NOT NULL, "
-                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH + " INTEGER NOT NULL, "
-                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT + " TEXT NOT NULL, "
-                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES + " INTEGER NOT NULL, "
-                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT + " TEXT NOT NULL)";
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH + " INTEGER, "
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT + " TEXT, "
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES + " INTEGER, "
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT + " TEXT)";
 
         private static void createTableTrainingData(SQLiteDatabase db) {
             if (db == null) return;

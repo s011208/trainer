@@ -43,5 +43,46 @@ public class TrainerSettings {
         public static final String COLUMN_TRAINING_TIMES_UNIT = "t_times_unit";
         public static final String COLUMN_TRAINING_STRENGTH = "t_strength";
         public static final String COLUMN_TRAINING_STRENGTH_UNIT = "t_strength_unit";
+
+        private String mTrainingName;
+        private int mTrainingTimes;
+        private String mTrainingTimesUnit;
+        private int mTrainingStrength;
+        private String mTrainingStrengthUnit;
+
+        public TrainingDataSettings(String name, int time, String timeUnit, int strength, String strengthUnit) {
+            mTrainingName = name;
+            mTrainingStrength = strength;
+            mTrainingStrengthUnit = strengthUnit;
+            mTrainingTimes = time;
+            mTrainingTimesUnit = timeUnit;
+        }
+
+        public String getTrainingStrengthUnit() {
+            return mTrainingStrengthUnit;
+        }
+
+        public int getTrainingStrength() {
+            return mTrainingStrength;
+        }
+
+        public String getTrainingTimeUnit() {
+            return mTrainingTimesUnit;
+        }
+
+        public int getTrainingTime() {
+            return mTrainingTimes;
+        }
+
+        public String getTrainingName() {
+            return mTrainingName;
+        }
+
+        @Override
+        public String toString() {
+            return "getTrainingName: " + getTrainingName() + ", getTrainingTime: " + getTrainingTime()
+                    + ", getTrainingTimeUnit: " + getTrainingTimeUnit() + ", getTrainingStrength: " + getTrainingStrength()
+                    + ", getTrainingStrengthUnit: " + getTrainingStrengthUnit();
+        }
     }
 }
