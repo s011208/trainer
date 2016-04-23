@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,17 +44,24 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
     private static final int ANIMATION_FLOATING_ACTION_BUTTON_DURATION = 250;
 
     private static final int REQUEST_ADD_SCHEDULE = 0;
+    private static final int SELECTED_DATE_TEXT_COLOR = android.R.color.holo_blue_dark;
+    private static final int SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE = R.drawable.scheduled_date_color;
 
     private View mRoot;
-    private CalendarView mCalendarView;
+    private CaldroidFragment mCaldroidFragment;
     private ListView mScheduleList;
     private FloatingActionButton mAddSchedule;
+    private Date mSelectedDate;
 
     private int mSelectedYear, mSelectedMonth, mSelectedDayOfMonth;
+    private final ArrayList<Date> mScheduledDate = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCaldroidFragment = new CaldroidFragment();
+        if (savedInstanceState != null) {
+        }
     }
 
     @Nullable
@@ -63,6 +72,17 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
         return mRoot;
     }
 
+    private static Date getDate(int y, int m, int d) {
+        Calendar c = Calendar.getInstance();
+        c.set(y, m, d);
+        return c.getTime();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     private void setScheduleAdapter() {
         mScheduleList.setAdapter(null);
         ScheduleAdapter adapter = new ScheduleAdapter(getActivity(), mSelectedYear, mSelectedMonth, mSelectedDayOfMonth);
@@ -70,10 +90,37 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
     }
 
     private void initComponents() {
-        mCalendarView = (CalendarView) mRoot.findViewById(R.id.calendar_view);
-        mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        Bundle args = new Bundle();
+        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
+        args.putBoolean(CaldroidFragment.ENABLE_SWIPE, false);
+        mCaldroidFragment.setArguments(args);
+        mCaldroidFragment.setCaldroidListener(new CaldroidListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+            public void onCaldroidViewCreated() {
+                super.onCaldroidViewCreated();
+                Calendar c = Calendar.getInstance();
+                mCaldroidFragment.setSelectedDate(c.getTime());
+                mSelectedYear = c.get(Calendar.YEAR);
+                mSelectedMonth = c.get(Calendar.MONTH);
+                mSelectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                mSelectedDate = c.getTime();
+                mCaldroidFragment.setTextColorForDate(SELECTED_DATE_TEXT_COLOR, mSelectedDate);
+                mCaldroidFragment.setBackgroundDrawableForDate(getActivity().getResources().getDrawable(SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE), mSelectedDate);
+                mCaldroidFragment.refreshView();
+            }
+
+            @Override
+            public void onChangeMonth(int month, int year) {
+                super.onChangeMonth(month, year);
+            }
+
+            @Override
+            public void onSelectDate(Date date, View view) {
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
                 if (DEBUG) {
                     Log.d(TAG, "y: " + year + ", m: " + (month + 1) + ", d: " + dayOfMonth);
                 }
@@ -81,14 +128,14 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
                 mSelectedMonth = month + 1;
                 mSelectedDayOfMonth = dayOfMonth;
                 setScheduleAdapter();
+                mCaldroidFragment.clearTextColorForDate(mSelectedDate);
+                mSelectedDate = date;
+                mCaldroidFragment.setTextColorForDate(SELECTED_DATE_TEXT_COLOR, mSelectedDate);
+                mCaldroidFragment.setBackgroundDrawableForDate(getActivity().getResources().getDrawable(SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE), mSelectedDate);
+                mCaldroidFragment.refreshView();
             }
         });
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date(mCalendarView.getDate()));
-        mSelectedYear = c.get(Calendar.YEAR);
-        mSelectedMonth = c.get(Calendar.MONTH) + 1;
-        mSelectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        getFragmentManager().beginTransaction().replace(R.id.calendar_view, mCaldroidFragment).commit();
 
         mScheduleList = (ListView) mRoot.findViewById(R.id.calendar_plan);
         setScheduleAdapter();
@@ -97,9 +144,10 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
         mAddSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DEBUG)
+                if (DEBUG) {
                     Log.d(TAG, "click add schedule, y: " + mSelectedYear + ", m: " + mSelectedMonth
                             + ", d: " + mSelectedDayOfMonth);
+                }
                 AddScheduleDialogFragment dialog = new AddScheduleDialogFragment();
                 Bundle arguments = new Bundle();
                 arguments.putInt(AddScheduleDialogFragment.KEY_YEAR, mSelectedYear);

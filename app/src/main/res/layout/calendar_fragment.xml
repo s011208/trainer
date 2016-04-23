@@ -9,18 +9,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <CalendarView
+        <FrameLayout
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"></CalendarView>
+            android:layout_weight="1"></FrameLayout>
 
         <ListView
             android:id="@+id/calendar_plan"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/calendar_schedule_list_layout_margin"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:divider="#ffaaaaaa"
             android:dividerHeight="1dp"
             android:minHeight="?android:attr/listPreferredItemHeight"></ListView>
