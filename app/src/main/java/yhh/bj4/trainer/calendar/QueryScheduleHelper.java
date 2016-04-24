@@ -18,7 +18,7 @@ import yhh.bj4.trainer.Utilities;
  */
 public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> {
     private static final String TAG = "QueryScheduleHelper";
-    private static final boolean DEBUG = Utilities.DEBUG;
+    private static final boolean DEBUG = false;
 
     public interface Callback {
         void onFinishLoading(ArrayList<Date> dates);
@@ -29,6 +29,9 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
 
     public QueryScheduleHelper(Context context, Callback cb) {
         super();
+        if (DEBUG) {
+            Log.e(TAG, "cb == null: " + (cb == null) + ", cb: " + cb);
+        }
         mContext = new WeakReference<>(context);
         mCallback = new WeakReference<>(cb);
     }
@@ -36,10 +39,20 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
     @Override
     protected ArrayList<Date> doInBackground(Void... params) {
         final Context context = mContext.get();
-        if (context == null) return null;
+        if (context == null) {
+            if (DEBUG) {
+                Log.i(TAG, "(context == null)");
+            }
+            return null;
+        }
         final ArrayList<Date> rtn = new ArrayList<>();
         Cursor data = context.getContentResolver().query(TrainerSettings.CalendarSettings.getUri(false), null, null, null, null, null);
-        if (data == null) return null;
+        if (data == null) {
+            if (DEBUG) {
+                Log.i(TAG, "(data == null)");
+            }
+            return null;
+        }
         try {
             final int indexOfYear = data.getColumnIndex((TrainerSettings.CalendarSettings.COLUMN_YEAR));
             final int indexOfMonth = data.getColumnIndex((TrainerSettings.CalendarSettings.COLUMN_MONTH));
@@ -60,10 +73,18 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
 
     @Override
     protected void onPostExecute(ArrayList<Date> dates) {
-        if (dates == null || dates.isEmpty()) return;
+        if (dates == null || dates.isEmpty()) {
+            if (DEBUG) {
+                Log.i(TAG, "(dates == null): " + (dates == null) + ", dates.isEmpty(): " + dates.isEmpty());
+            }
+            return;
+        }
         super.onPostExecute(dates);
         final Callback cb = mCallback.get();
-        if (cb == null) return;
+        if (cb == null) {
+            if (DEBUG) Log.i(TAG, "cb == null");
+            return;
+        }
         if (DEBUG) {
             Log.v(TAG, "onPostExecute, dates size: " + dates.size());
         }

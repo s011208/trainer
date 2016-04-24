@@ -38,7 +38,7 @@ import yhh.bj4.trainer.ViewPagerCallbackFragment;
 /**
  * Created by User on 2016/4/18.
  */
-public class CalendarFragment extends ViewPagerCallbackFragment {
+public class CalendarFragment extends ViewPagerCallbackFragment implements QueryScheduleHelper.Callback {
     private static final boolean DEBUG = Utilities.DEBUG;
     private static final String TAG = "CalendarFragment";
 
@@ -63,15 +63,19 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCaldroidFragment = new CaldroidFragment();
-        new QueryScheduleHelper(getActivity(), new QueryScheduleHelper.Callback() {
-            @Override
-            public void onFinishLoading(ArrayList<Date> dates) {
-                mScheduledDate.clear();
-                mScheduledDate.addAll(dates);
-                setScheduleDates();
-            }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (DEBUG) {
+            Log.e(TAG, "onCreate");
+        }
+        new QueryScheduleHelper(getActivity(), CalendarFragment.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         if (savedInstanceState != null) {
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (DEBUG) {
+            Log.e(TAG, "onDestroy");
         }
     }
 
@@ -81,12 +85,6 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
         mRoot = inflater.inflate(R.layout.calendar_fragment, null);
         initComponents();
         return mRoot;
-    }
-
-    private static Date getDate(int y, int m, int d) {
-        Calendar c = Calendar.getInstance();
-        c.set(y, m, d);
-        return c.getTime();
     }
 
     @Override
@@ -108,7 +106,6 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
     }
 
     private void setScheduleDates() {
-        if (mCaldroidFragment == null) return;
         HashMap<Date, Drawable> map = new HashMap<>();
         for (Date date : mScheduledDate) {
             Log.e(TAG, "setScheduleDates: " + date);
@@ -134,7 +131,6 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
                 mSelectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
                 mSelectedDate = c.getTime();
                 mCaldroidFragment.setTextColorForDate(SELECTED_DATE_TEXT_COLOR, mSelectedDate);
-                mCaldroidFragment.setBackgroundDrawableForDate(getActivity().getResources().getDrawable(SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE), mSelectedDate);
                 mCaldroidFragment.refreshView();
             }
 
@@ -211,6 +207,13 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
 
     @Override
     public void onInVisible() {
+    }
+
+    @Override
+    public void onFinishLoading(ArrayList<Date> dates) {
+        mScheduledDate.clear();
+        mScheduledDate.addAll(dates);
+        setScheduleDates();
     }
 
     private static class ScheduleAdapter extends BaseAdapter {
