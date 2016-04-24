@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.roomorama.caldroid.CaldroidListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -55,11 +57,20 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
 
     private int mSelectedYear, mSelectedMonth, mSelectedDayOfMonth;
     private final ArrayList<Date> mScheduledDate = new ArrayList<>();
+    private Drawable mScheduledDateDrawable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCaldroidFragment = new CaldroidFragment();
+        new QueryScheduleHelper(getActivity(), new QueryScheduleHelper.Callback() {
+            @Override
+            public void onFinishLoading(ArrayList<Date> dates) {
+                mScheduledDate.clear();
+                mScheduledDate.addAll(dates);
+                setScheduleDates();
+            }
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         if (savedInstanceState != null) {
         }
     }
@@ -87,6 +98,24 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
         mScheduleList.setAdapter(null);
         ScheduleAdapter adapter = new ScheduleAdapter(getActivity(), mSelectedYear, mSelectedMonth, mSelectedDayOfMonth);
         mScheduleList.setAdapter(adapter);
+    }
+
+    private Drawable getScheduleDateDrawable() {
+        if (mScheduledDateDrawable == null) {
+            mScheduledDateDrawable = getActivity().getResources().getDrawable(SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE);
+        }
+        return mScheduledDateDrawable;
+    }
+
+    private void setScheduleDates() {
+        if (mCaldroidFragment == null) return;
+        HashMap<Date, Drawable> map = new HashMap<>();
+        for (Date date : mScheduledDate) {
+            Log.e(TAG, "setScheduleDates: " + date);
+            map.put(date, getScheduleDateDrawable());
+        }
+        mCaldroidFragment.setBackgroundDrawableForDates(map);
+        mCaldroidFragment.refreshView();
     }
 
     private void initComponents() {
@@ -131,7 +160,6 @@ public class CalendarFragment extends ViewPagerCallbackFragment {
                 mCaldroidFragment.clearTextColorForDate(mSelectedDate);
                 mSelectedDate = date;
                 mCaldroidFragment.setTextColorForDate(SELECTED_DATE_TEXT_COLOR, mSelectedDate);
-                mCaldroidFragment.setBackgroundDrawableForDate(getActivity().getResources().getDrawable(SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE), mSelectedDate);
                 mCaldroidFragment.refreshView();
             }
         });
