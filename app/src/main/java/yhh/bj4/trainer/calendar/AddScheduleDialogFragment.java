@@ -219,12 +219,12 @@ public class AddScheduleDialogFragment extends DialogFragment {
 
     private void setTextDate(TextView text, int add) {
         Calendar c = Calendar.getInstance();
-        c.set(mScheduleYear, mScheduleMonth, mScheduleDayOfMonth);
+        c.set(mScheduleYear, mScheduleMonth - 1, mScheduleDayOfMonth);
         if (add != 0) {
             c.add(Calendar.DATE, add);
         }
         mScheduleYear = c.get(Calendar.YEAR);
-        mScheduleMonth = c.get(Calendar.MONTH);
+        mScheduleMonth = c.get(Calendar.MONTH) + 1;
         mScheduleDayOfMonth = c.get(Calendar.DATE);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy.MM.dd");
