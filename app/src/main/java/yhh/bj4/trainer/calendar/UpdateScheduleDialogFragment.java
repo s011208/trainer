@@ -171,7 +171,14 @@ public class UpdateScheduleDialogFragment extends DialogFragment {
         mTrainingTimes.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
         mTrainingTimesUnit.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
 
-        new RetrieveAutoCompleteItemsHelper(mTrainingItem, getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        ArrayList<String> trainingItemData = retrieveAutoCompleteItems(getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME);
+        if (trainingItemData != null && !trainingItemData.isEmpty()) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, trainingItemData);
+            mTrainingItem.setAdapter(adapter);
+        } else {
+            new RetrieveAutoCompleteItemsHelper(mTrainingItem, getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
         new RetrieveAutoCompleteItemsHelper(mTrainingStrength, getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new RetrieveAutoCompleteItemsHelper(mTrainingStrengthUnit, getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new RetrieveAutoCompleteItemsHelper(mTrainingTimes, getActivity(), TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -190,6 +197,21 @@ public class UpdateScheduleDialogFragment extends DialogFragment {
         return title;
     }
 
+    private static ArrayList<String> retrieveAutoCompleteItems(Context context, String column) {
+        Cursor data = context.getContentResolver().query(TrainerSettings.TrainingDataSettings.getUri(false), new String[]{column}, column + "!=''", null, null, null);
+        HashSet<String> set = new HashSet<>();
+        if (data == null) return null;
+        try {
+            while (data.moveToNext()) {
+                set.add(data.getString(0));
+            }
+        } finally {
+            data.close();
+        }
+        if (set.isEmpty()) return null;
+        return new ArrayList<>(set);
+    }
+
     private static class RetrieveAutoCompleteItemsHelper extends AsyncTask<Void, Void, Void> {
         private final AutoCompleteTextView mTarget;
         private final ArrayList<String> mContent = new ArrayList<>();
@@ -206,18 +228,9 @@ public class UpdateScheduleDialogFragment extends DialogFragment {
         @Override
         protected Void doInBackground(Void... params) {
             if (mContext == null) return null;
-            Cursor data = mContext.getContentResolver().query(TrainerSettings.TrainingDataSettings.getUri(false), new String[]{mColumn}, null, null, null, null);
-            HashSet<String> set = new HashSet<>();
+            ArrayList<String> data = retrieveAutoCompleteItems(mContext, mColumn);
             if (data == null) return null;
-            try {
-                while (data.moveToNext()) {
-                    set.add(data.getString(0));
-                }
-            } finally {
-                data.close();
-            }
-            if (set.isEmpty()) return null;
-            mContent.addAll(set);
+            mContent.addAll(data);
             return null;
         }
 
