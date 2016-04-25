@@ -118,7 +118,7 @@ public class TrainerProvider extends ContentProvider {
 
     private static class TrainerDatabase extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "TrainerDatabase.db";
-        private static final int VERSION = 1;
+        private static final int VERSION = 2;
 
         public TrainerDatabase(Context context) {
             super(context, DATABASE_NAME, null, VERSION);
@@ -144,6 +144,8 @@ public class TrainerProvider extends ContentProvider {
                 + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH + " INTEGER, "
                 + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT + " TEXT, "
                 + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES + " INTEGER, "
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_ADD_TIME + " INTEGER, "
+                + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_LOCATION + " TEXT, "
                 + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT + " TEXT)";
 
         private static void createTableTrainingData(SQLiteDatabase db) {
@@ -159,7 +161,14 @@ public class TrainerProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            int version = 1;
+            if (version < newVersion) {
+                db.execSQL("ALTER TABLE " + TrainerSettings.TrainingDataSettings.TABLE_TRAINING_DATA_SETTINGS
+                        + " ADD COLUMN " + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_ADD_TIME + " INTEGER");
+                db.execSQL("ALTER TABLE " + TrainerSettings.TrainingDataSettings.TABLE_TRAINING_DATA_SETTINGS
+                        + " ADD COLUMN " + TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_LOCATION + " TEXT");
+                ++version;
+            }
         }
     }
 }

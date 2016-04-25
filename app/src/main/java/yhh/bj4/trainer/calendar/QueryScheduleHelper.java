@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import yhh.bj4.trainer.TrainerSettings;
 import yhh.bj4.trainer.Utilities;
@@ -16,12 +17,12 @@ import yhh.bj4.trainer.Utilities;
 /**
  * Created by User on 2016/4/24.
  */
-public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> {
+public class QueryScheduleHelper extends AsyncTask<Void, Void, HashMap<Date, Integer>> {
     private static final String TAG = "QueryScheduleHelper";
     private static final boolean DEBUG = false;
 
     public interface Callback {
-        void onFinishLoading(ArrayList<Date> dates);
+        void onFinishLoading(HashMap<Date, Integer> dates);
     }
 
     private final WeakReference<Context> mContext;
@@ -37,7 +38,7 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
     }
 
     @Override
-    protected ArrayList<Date> doInBackground(Void... params) {
+    protected HashMap<Date, Integer> doInBackground(Void... params) {
         final Context context = mContext.get();
         if (context == null) {
             if (DEBUG) {
@@ -45,7 +46,7 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
             }
             return null;
         }
-        final ArrayList<Date> rtn = new ArrayList<>();
+        final HashMap<Date, Integer> rtn = new HashMap<>();
         Cursor data = context.getContentResolver().query(TrainerSettings.CalendarSettings.getUri(false), null, null, null, null, null);
         if (data == null) {
             if (DEBUG) {
@@ -63,7 +64,13 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
                 final int month = data.getInt(indexOfMonth) - 1;
                 final int day = data.getInt(indexOfDay);
                 calendar.set(year, month, day);
-                rtn.add(calendar.getTime());
+                Date d = calendar.getTime();
+                if (rtn.containsKey(d)) {
+                    int v = rtn.get(d);
+                    rtn.put(d, ++v);
+                } else {
+                    rtn.put(d, 1);
+                }
             }
         } finally {
             data.close();
@@ -72,7 +79,7 @@ public class QueryScheduleHelper extends AsyncTask<Void, Void, ArrayList<Date>> 
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Date> dates) {
+    protected void onPostExecute(HashMap<Date, Integer> dates) {
         if (dates == null || dates.isEmpty()) {
             if (DEBUG) {
                 Log.i(TAG, "(dates == null): " + (dates == null) + ", dates.isEmpty(): " + dates.isEmpty());

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,6 +35,7 @@ import yhh.bj4.trainer.R;
 import yhh.bj4.trainer.TrainerSettings;
 import yhh.bj4.trainer.Utilities;
 import yhh.bj4.trainer.ViewPagerCallbackFragment;
+import yhh.bj4.trainer.YMDDateKey;
 
 /**
  * Created by User on 2016/4/18.
@@ -46,6 +48,7 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
     private static final int ANIMATION_FLOATING_ACTION_BUTTON_DURATION = 250;
 
     private static final int REQUEST_ADD_SCHEDULE = 0;
+    private static final int REQUEST_UPDATE_SCHEDULE = 1;
     private static final int SELECTED_DATE_TEXT_COLOR = android.R.color.holo_blue_dark;
     private static final int SCHEDULED_DATE_BACKGROUND_DRAWABLE_RESOURCE = R.drawable.scheduled_date_color;
 
@@ -56,7 +59,7 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
     private Date mSelectedDate;
 
     private int mSelectedYear, mSelectedMonth, mSelectedDayOfMonth;
-    private final ArrayList<Date> mScheduledDate = new ArrayList<>();
+    private final HashMap<YMDDateKey, Integer> mScheduledDate = new HashMap<>();
     private Drawable mScheduledDateDrawable;
 
     @Override
@@ -107,11 +110,16 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
 
     private void setScheduleDates() {
         HashMap<Date, Drawable> map = new HashMap<>();
-        for (Date date : mScheduledDate) {
+        for (YMDDateKey date : mScheduledDate.keySet()) {
             Log.e(TAG, "setScheduleDates: " + date);
-            map.put(date, getScheduleDateDrawable());
+            map.put(date.getDate(), getScheduleDateDrawable());
         }
         mCaldroidFragment.setBackgroundDrawableForDates(map);
+        mCaldroidFragment.refreshView();
+    }
+
+    private void removeScheduleDate(YMDDateKey date) {
+        mCaldroidFragment.clearBackgroundDrawableForDate(date.getDate());
         mCaldroidFragment.refreshView();
     }
 
@@ -162,6 +170,24 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
         getFragmentManager().beginTransaction().replace(R.id.calendar_view, mCaldroidFragment).commit();
 
         mScheduleList = (ListView) mRoot.findViewById(R.id.calendar_plan);
+        mScheduleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final TrainerSettings.TrainingDataSettings item = ((ScheduleAdapter) mScheduleList.getAdapter()).getItem(position);
+                if (DEBUG) {
+                    Log.d(TAG, "click id: " + item.getId());
+                }
+                UpdateScheduleDialogFragment dialog = new UpdateScheduleDialogFragment();
+                Bundle arguments = new Bundle();
+                arguments.putInt(UpdateScheduleDialogFragment.KEY_YEAR, mSelectedYear);
+                arguments.putInt(UpdateScheduleDialogFragment.KEY_MONTH, mSelectedMonth);
+                arguments.putInt(UpdateScheduleDialogFragment.KEY_DAY_OF_MONTH, mSelectedDayOfMonth);
+                arguments.putString(UpdateScheduleDialogFragment.KEY_TRAINING_DATA, item.toJson().toString());
+                dialog.setArguments(arguments);
+                dialog.setTargetFragment(CalendarFragment.this, REQUEST_UPDATE_SCHEDULE);
+                dialog.show(getFragmentManager(), dialog.getClass().getName());
+            }
+        });
         setScheduleAdapter();
 
         mAddSchedule = (FloatingActionButton) mRoot.findViewById(R.id.add_schedule);
@@ -195,6 +221,43 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
                 }
                 setScheduleAdapter();
             }
+        } else if (requestCode == REQUEST_UPDATE_SCHEDULE) {
+            if (resultCode == Activity.RESULT_OK) {
+                boolean delete = data.getBooleanExtra(UpdateScheduleDialogFragment.INTENT_DELETE_ITEM, false);
+                if (DEBUG) {
+                    Log.d(TAG, "update schedule, delete: " + delete);
+                }
+                setScheduleAdapter();
+                if (delete) {
+                    // check the selected item status
+                    Calendar c = Calendar.getInstance();
+                    c.set(data.getIntExtra(UpdateScheduleDialogFragment.KEY_YEAR, 0)
+                            , data.getIntExtra(UpdateScheduleDialogFragment.KEY_MONTH, 0) - 1,
+                            data.getIntExtra(UpdateScheduleDialogFragment.KEY_DAY_OF_MONTH, 0));
+                    YMDDateKey date = new YMDDateKey(c);
+                    if (DEBUG) {
+                        Log.d(TAG, "delete date: " + date + ", mScheduledDate.containsKey(date): " + mScheduledDate.containsKey(date));
+                    }
+                    if (mScheduledDate.containsKey(date)) {
+                        int value = mScheduledDate.get(date);
+                        if (DEBUG) {
+                            Log.d(TAG, "mScheduledDate value: " + value);
+                        }
+                        if (--value <= 0) {
+                            if (DEBUG) {
+                                Log.d(TAG, "--value <= 0");
+                            }
+                            mScheduledDate.remove(date);
+                            removeScheduleDate(date);
+                        } else {
+                            if (DEBUG) {
+                                Log.d(TAG, "else");
+                            }
+                            mScheduledDate.put(date, value);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -210,9 +273,17 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
     }
 
     @Override
-    public void onFinishLoading(ArrayList<Date> dates) {
+    public void onFinishLoading(HashMap<Date, Integer> dates) {
         mScheduledDate.clear();
-        mScheduledDate.addAll(dates);
+        Iterator<Date> iterator = dates.keySet().iterator();
+        Calendar c = Calendar.getInstance();
+        while (iterator.hasNext()) {
+            final Date key = iterator.next();
+            c.setTime(key);
+            int value = dates.get(key);
+            YMDDateKey date = new YMDDateKey(c);
+            mScheduledDate.put(date, value);
+        }
         setScheduleDates();
     }
 
@@ -261,29 +332,9 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
                     if (DEBUG) {
                         Log.d(TAG, "where: " + where);
                     }
-                    Cursor schedule = mContext.getContentResolver().query(TrainerSettings.TrainingDataSettings.getUri(false), null, where, null, null, null);
-                    if (schedule == null) return null;
+                    Cursor schedule = mContext.getContentResolver().query(TrainerSettings.TrainingDataSettings.getUri(false), null, where, null, TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_ADD_TIME, null);
                     ArrayList<TrainerSettings.TrainingDataSettings> rtn = new ArrayList<>();
-                    try {
-                        final int indexOfTrainingName = schedule.getColumnIndex(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME);
-                        final int indexOfTrainingStrength = schedule.getColumnIndex(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH);
-                        final int indexOfTrainingStrengthUnit = schedule.getColumnIndex(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT);
-                        final int indexOfTrainingTime = schedule.getColumnIndex(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES);
-                        final int indexOfTrainingTimeUnit = schedule.getColumnIndex(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT);
-                        while (schedule.moveToNext()) {
-                            rtn.add(new TrainerSettings.TrainingDataSettings(
-                                    schedule.getString(indexOfTrainingName),
-                                    schedule.getInt(indexOfTrainingTime),
-                                    schedule.getString(indexOfTrainingTimeUnit),
-                                    schedule.getInt(indexOfTrainingStrength),
-                                    schedule.getString(indexOfTrainingStrengthUnit)));
-                            if (DEBUG) {
-                                Log.v(TAG, "item: " + rtn.get(rtn.size() - 1));
-                            }
-                        }
-                    } finally {
-                        schedule.close();
-                    }
+                    rtn.addAll(TrainerSettings.TrainingDataSettings.from(schedule));
                     return rtn;
                 }
 

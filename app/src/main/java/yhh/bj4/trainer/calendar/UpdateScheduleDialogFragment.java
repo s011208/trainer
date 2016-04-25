@@ -3,12 +3,11 @@ package yhh.bj4.trainer.calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,36 +19,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 
 import yhh.bj4.trainer.R;
 import yhh.bj4.trainer.TrainerSettings;
 import yhh.bj4.trainer.Utilities;
+import yhh.bj4.trainer.dialog.ConfirmDialog;
 
 /**
- * Created by Yen-Hsun_Huang on 2016/4/22.
+ * Created by yenhsunhuang on 2016/4/25.
  */
-public class AddScheduleDialogFragment extends DialogFragment {
-
-    private static final String TAG = "AddScheduleDialog";
+public class UpdateScheduleDialogFragment extends DialogFragment {
     private static final boolean DEBUG = Utilities.DEBUG;
 
+    private static final String TAG = "UpdateScheduleDialog";
     private static final int AUTO_COMPLETE_TEXT_THRESHOLD = 0;
-
     public static final String KEY_YEAR = "k_y";
     public static final String KEY_MONTH = "k_m";
     public static final String KEY_DAY_OF_MONTH = "k_d_m";
+    public static final String KEY_TRAINING_DATA = "t_d";
+    public static final String INTENT_DELETE_ITEM = "delete_item";
+
+    private static final int REQUEST_CONFIRM_DELETE = 0;
 
     private int mScheduleYear, mScheduleMonth, mScheduleDayOfMonth;
-
     private AutoCompleteTextView mTrainingItem, mTrainingStrength, mTrainingStrengthUnit, mTrainingTimes, mTrainingTimesUnit;
+    private TrainerSettings.TrainingDataSettings mTrainingData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class AddScheduleDialogFragment extends DialogFragment {
             mScheduleYear = arguments.getInt(KEY_YEAR);
             mScheduleMonth = arguments.getInt(KEY_MONTH);
             mScheduleDayOfMonth = arguments.getInt(KEY_DAY_OF_MONTH);
+            mTrainingData = new TrainerSettings.TrainingDataSettings(arguments.getString(KEY_TRAINING_DATA));
         }
     }
 
@@ -70,14 +71,35 @@ public class AddScheduleDialogFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (saveTrainingData()) {
-                            getTargetFragment().onActivityResult(
-                                    getTargetRequestCode(), Activity.RESULT_OK, null);
-                        } else {
-                            Toast.makeText(getActivity(), R.string.dialog_add_schedule_content_add_failed, Toast.LENGTH_SHORT).show();
+                        ContentValues cv = new ContentValues();
+                        if (!TextUtils.isEmpty(mTrainingItem.getText())) {
+                            cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME, mTrainingItem.getText().toString());
+                        }
+                        if (!TextUtils.isEmpty(mTrainingStrength.getText())) {
+                            cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH, Integer.valueOf(mTrainingStrength.getText().toString()));
+                        }
+                        if (!TextUtils.isEmpty(mTrainingStrengthUnit.getText())) {
+                            cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT, mTrainingStrengthUnit.getText().toString());
+                        }
+                        if (!TextUtils.isEmpty(mTrainingTimes.getText())) {
+                            cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES, Integer.valueOf(mTrainingTimes.getText().toString()));
+                        }
+                        if (!TextUtils.isEmpty(mTrainingTimesUnit.getText())) {
+                            cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT, mTrainingTimesUnit.getText().toString());
+                        }
+                        if (cv.size() > 0) {
+                            getActivity().getContentResolver().update(TrainerSettings.TrainingDataSettings.getUri(true), cv, TrainerSettings.TrainingDataSettings.COLUMN_ID + "=" + mTrainingData.getId(), null);
+                            Intent intent = getActivity().getIntent();
+                            intent.putExtra(INTENT_DELETE_ITEM, false);
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setNeutralButton(R.string.dialog_update_schedule_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -86,46 +108,47 @@ public class AddScheduleDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+        AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog == null) return;
+        Button neutralButton = (Button) dialog.getButton(Dialog.BUTTON_NEUTRAL);
+        if (neutralButton == null) return;
+        neutralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDialog confirmDialog = new ConfirmDialog();
+                Bundle argument = new Bundle();
+                argument.putString(ConfirmDialog.KEY_TITLE, getActivity().getResources().getString(R.string.dialog_update_schedule_confirm_delete_title));
+                argument.putString(ConfirmDialog.KEY_MESSAGE, getActivity().getResources().getString(R.string.dialog_update_schedule_confirm_delete_message));
+                confirmDialog.setArguments(argument);
+                confirmDialog.setTargetFragment(UpdateScheduleDialogFragment.this, REQUEST_CONFIRM_DELETE);
+                confirmDialog.show(getFragmentManager(), confirmDialog.getClass().getName());
+            }
+        });
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CONFIRM_DELETE) {
+            if (resultCode == Activity.RESULT_OK) {
+                boolean confirmed = data.getBooleanExtra(ConfirmDialog.INTENT_ON_CONFIRM, false);
+                if (DEBUG) Log.i(TAG, "confirmed: " + confirmed);
+                if (confirmed) {
+                    getActivity().getContentResolver().delete(TrainerSettings.TrainingDataSettings.getUri(true), TrainerSettings.TrainingDataSettings.COLUMN_ID + "=" + mTrainingData.getId(), null);
+                    getActivity().getContentResolver().delete(TrainerSettings.CalendarSettings.getUri(true), TrainerSettings.CalendarSettings.COLUMN_TRAINING_ID + "=" + mTrainingData.getId(), null);
+                    Intent intent = getActivity().getIntent();
+                    intent.putExtra(INTENT_DELETE_ITEM, true);
+                    intent.putExtra(KEY_YEAR, mScheduleYear);
+                    intent.putExtra(KEY_MONTH, mScheduleMonth);
+                    intent.putExtra(KEY_DAY_OF_MONTH, mScheduleDayOfMonth);
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 
-    private boolean saveTrainingData() {
-        if (DEBUG) {
-            Log.d(TAG, mScheduleYear + "-" + mScheduleMonth + "-" + mScheduleDayOfMonth + "\n"
-                    + "item: " + mTrainingItem.getText() + "\n"
-                    + "intensity: " + mTrainingStrength.getText() + ", unit: " + mTrainingStrengthUnit.getText() + "\n"
-                    + "times: " + mTrainingTimes.getText() + ", unit: " + mTrainingTimesUnit.getText());
+                    dismiss();
+                }
+            }
         }
-        if (TextUtils.isEmpty(mTrainingItem.getText())) {
-            return false;
-        }
-        ContentValues cv = new ContentValues();
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME, mTrainingItem.getText().toString());
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH, mTrainingStrength.getText().toString());
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_STRENGTH_UNIT, mTrainingStrengthUnit.getText().toString());
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES, mTrainingTimes.getText().toString());
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_TIMES_UNIT, mTrainingTimesUnit.getText().toString());
-        cv.put(TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_ADD_TIME, System.currentTimeMillis());
-        // TODO add location
-
-        Uri insertTrainingDataResult = getActivity().getContentResolver().insert(TrainerSettings.TrainingDataSettings.getUri(true), cv);
-        long id = ContentUris.parseId(insertTrainingDataResult);
-        if (DEBUG) {
-            Log.d(TAG, "insertTrainingDataResult id: " + id);
-        }
-        cv = new ContentValues();
-        cv.put(TrainerSettings.CalendarSettings.COLUMN_TRAINING_ID, id);
-        cv.put(TrainerSettings.CalendarSettings.COLUMN_YEAR, mScheduleYear);
-        cv.put(TrainerSettings.CalendarSettings.COLUMN_MONTH, mScheduleMonth);
-        cv.put(TrainerSettings.CalendarSettings.COLUMN_DAY_OF_MONTH, mScheduleDayOfMonth);
-        getActivity().getContentResolver().insert(TrainerSettings.CalendarSettings.getUri(true), cv);
-        return true;
     }
 
     private View getCustomContent(LayoutInflater inflater) {
@@ -135,6 +158,12 @@ public class AddScheduleDialogFragment extends DialogFragment {
         mTrainingStrengthUnit = (AutoCompleteTextView) rtn.findViewById(R.id.train_strength_unit);
         mTrainingTimes = (AutoCompleteTextView) rtn.findViewById(R.id.train_times);
         mTrainingTimesUnit = (AutoCompleteTextView) rtn.findViewById(R.id.train_times_unit);
+
+        mTrainingItem.setHint(mTrainingData.getTrainingName());
+        mTrainingStrength.setHint(String.valueOf(mTrainingData.getTrainingStrength()));
+        mTrainingStrengthUnit.setHint(mTrainingData.getTrainingStrengthUnit());
+        mTrainingTimes.setHint(String.valueOf(mTrainingData.getTrainingTime()));
+        mTrainingTimesUnit.setHint(mTrainingData.getTrainingTimeUnit());
 
         mTrainingItem.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
         mTrainingStrength.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
@@ -153,36 +182,12 @@ public class AddScheduleDialogFragment extends DialogFragment {
     private View getCustomTitleView(LayoutInflater inflater) {
         final View title = inflater.inflate(R.layout.dialog_add_schedule_title, null);
         final TextView currentDate = (TextView) title.findViewById(R.id.current_date);
+        currentDate.setText(mScheduleYear + "." + mScheduleMonth + "." + mScheduleDayOfMonth);
         final ImageView moveToPrevious = (ImageView) title.findViewById(R.id.previous);
-        moveToPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTextDate(currentDate, -1);
-            }
-        });
+        moveToPrevious.setVisibility(View.INVISIBLE);
         final ImageView moveToNext = (ImageView) title.findViewById(R.id.next);
-        moveToNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTextDate(currentDate, 1);
-            }
-        });
-        setTextDate(currentDate, 0);
+        moveToNext.setVisibility(View.INVISIBLE);
         return title;
-    }
-
-    private void setTextDate(TextView text, int add) {
-        Calendar c = Calendar.getInstance();
-        c.set(mScheduleYear, mScheduleMonth, mScheduleDayOfMonth);
-        if (add != 0) {
-            c.add(Calendar.DATE, add);
-        }
-        mScheduleYear = c.get(Calendar.YEAR);
-        mScheduleMonth = c.get(Calendar.MONTH);
-        mScheduleDayOfMonth = c.get(Calendar.DATE);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy.MM.dd");
-        text.setText(dateFormat.format(c.getTime()));
     }
 
     private static class RetrieveAutoCompleteItemsHelper extends AsyncTask<Void, Void, Void> {
