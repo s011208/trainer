@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import yhh.bj4.trainer.calendar.CalendarFragment;
+import yhh.bj4.trainer.job.JobFragment;
 import yhh.bj4.trainer.timer.TimerListFragment;
 
 /**
@@ -14,7 +15,7 @@ public class TrainerPagerAdapter extends FragmentStatePagerAdapter {
 
     public TrainerPagerAdapter(FragmentManager fm) {
         super(fm);
-        mFragments[0] = new TimerListFragment();
+        mFragments[0] = new JobFragment();
         mFragments[1] = new CalendarFragment();
         mFragments[2] = new TimerListFragment();
     }
