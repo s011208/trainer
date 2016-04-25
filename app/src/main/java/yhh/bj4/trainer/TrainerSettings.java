@@ -98,14 +98,14 @@ public class TrainerSettings {
 
         private long mId;
         private String mTrainingName;
-        private int mTrainingTimes;
+        private String mTrainingTimes;
         private String mTrainingTimesUnit;
-        private int mTrainingStrength;
+        private String mTrainingStrength;
         private String mTrainingStrengthUnit;
         private long mAddTime;
         private String mLocation;
 
-        public TrainingDataSettings(long id, String name, int time, String timeUnit, int strength, String strengthUnit, long addTime, String location) {
+        public TrainingDataSettings(long id, String name, String time, String timeUnit, String strength, String strengthUnit, long addTime, String location) {
             mId = id;
             mTrainingName = name;
             mTrainingStrength = strength;
@@ -121,9 +121,9 @@ public class TrainerSettings {
                 JSONObject json = new JSONObject(fromJson);
                 mId = json.getLong(COLUMN_ID);
                 mTrainingName = json.getString(COLUMN_TRAINING_NAME);
-                mTrainingStrength = json.getInt(COLUMN_TRAINING_STRENGTH);
+                mTrainingStrength = json.getString(COLUMN_TRAINING_STRENGTH);
                 mTrainingStrengthUnit = json.getString(COLUMN_TRAINING_STRENGTH_UNIT);
-                mTrainingTimes = json.getInt(COLUMN_TRAINING_TIMES);
+                mTrainingTimes = json.getString(COLUMN_TRAINING_TIMES);
                 mTrainingTimesUnit = json.getString(COLUMN_TRAINING_TIMES_UNIT);
                 if (json.has(COLUMN_TRAINING_ADD_TIME))
                     mAddTime = json.getLong(COLUMN_TRAINING_ADD_TIME);
@@ -150,7 +150,7 @@ public class TrainerSettings {
             return mTrainingStrengthUnit;
         }
 
-        public int getTrainingStrength() {
+        public String getTrainingStrength() {
             return mTrainingStrength;
         }
 
@@ -158,7 +158,7 @@ public class TrainerSettings {
             return mTrainingTimesUnit;
         }
 
-        public int getTrainingTime() {
+        public String getTrainingTime() {
             return mTrainingTimes;
         }
 
@@ -204,9 +204,9 @@ public class TrainerSettings {
                     rtn.add(new TrainerSettings.TrainingDataSettings(
                             cursor.getLong(indexOfId),
                             cursor.getString(indexOfTrainingName),
-                            cursor.getInt(indexOfTrainingTime),
+                            cursor.getString(indexOfTrainingTime),
                             cursor.getString(indexOfTrainingTimeUnit),
-                            cursor.getInt(indexOfTrainingStrength),
+                            cursor.getString(indexOfTrainingStrength),
                             cursor.getString(indexOfTrainingStrengthUnit),
                             cursor.getLong(indexOfTrainingAddTime),
                             cursor.getString(indexOfTrainingLocation)));

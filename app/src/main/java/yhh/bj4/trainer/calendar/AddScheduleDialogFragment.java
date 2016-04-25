@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,6 +137,43 @@ public class AddScheduleDialogFragment extends DialogFragment {
         mTrainingStrengthUnit = (AutoCompleteTextView) rtn.findViewById(R.id.train_strength_unit);
         mTrainingTimes = (AutoCompleteTextView) rtn.findViewById(R.id.train_times);
         mTrainingTimesUnit = (AutoCompleteTextView) rtn.findViewById(R.id.train_times_unit);
+
+        mTrainingItem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Cursor c = getActivity().getContentResolver().query(TrainerSettings.TrainingDataSettings.getUri(false), null,
+                        TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_NAME + "='" + mTrainingItem.getText() + "'",
+                        null, TrainerSettings.TrainingDataSettings.COLUMN_TRAINING_ADD_TIME + " DESC LIMIT 1");
+                if (c == null) {
+                    return;
+                }
+                ArrayList<TrainerSettings.TrainingDataSettings> items = TrainerSettings.TrainingDataSettings.from(c);
+                if (items.isEmpty()) return;
+                TrainerSettings.TrainingDataSettings item = items.get(0);
+                if (TextUtils.isEmpty(mTrainingStrength.getText().toString())) {
+                    mTrainingStrength.setText(String.valueOf(item.getTrainingStrength()));
+                }
+                if (TextUtils.isEmpty(mTrainingStrengthUnit.getText().toString())) {
+                    mTrainingStrengthUnit.setText(item.getTrainingStrengthUnit());
+                }
+                if (TextUtils.isEmpty(mTrainingTimes.getText().toString())) {
+                    mTrainingTimes.setText(String.valueOf(item.getTrainingTime()));
+                }
+                if (TextUtils.isEmpty(mTrainingTimesUnit.getText().toString())) {
+                    mTrainingTimesUnit.setText(item.getTrainingTimeUnit());
+                }
+            }
+        });
 
         mTrainingItem.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
         mTrainingStrength.setThreshold(AUTO_COMPLETE_TEXT_THRESHOLD);
