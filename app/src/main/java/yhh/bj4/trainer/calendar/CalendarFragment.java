@@ -118,6 +118,11 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
         mCaldroidFragment.refreshView();
     }
 
+    private void addScheduleDate(YMDDateKey date) {
+        mCaldroidFragment.setBackgroundDrawableForDate(getScheduleDateDrawable(), date.getDate());
+        mCaldroidFragment.refreshView();
+    }
+
     private void removeScheduleDate(YMDDateKey date) {
         mCaldroidFragment.clearBackgroundDrawableForDate(date.getDate());
         mCaldroidFragment.refreshView();
@@ -220,6 +225,13 @@ public class CalendarFragment extends ViewPagerCallbackFragment implements Query
                     Log.d(TAG, "add new schedule");
                 }
                 setScheduleAdapter();
+                YMDDateKey date = new YMDDateKey(mSelectedYear, mSelectedMonth - 1, mSelectedDayOfMonth);
+                if (mScheduledDate.containsKey(date)) {
+                    mScheduledDate.put(date, mScheduledDate.get(date) + 1);
+                } else {
+                    mScheduledDate.put(date, 1);
+                    addScheduleDate(date);
+                }
             }
         } else if (requestCode == REQUEST_UPDATE_SCHEDULE) {
             if (resultCode == Activity.RESULT_OK) {
