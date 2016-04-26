@@ -41,4 +41,9 @@
     <dimen name="base_view_holder_title_text_size">20sp</dimen>
     <dimen name="base_view_title_bar_height">48dp</dimen>
     <dimen name="base_view_holder_sep_margin">1dp</dimen>
+    <!-- image job view holder-->
+    <dimen name="image_job_view_holder_image_size">100dp</dimen>
+    <dimen name="image_job_view_holder_main_text_size">20sp</dimen>
+    <dimen name="image_job_view_holder_sub_text_size">16sp</dimen>
+    <dimen name="image_job_view_holder_timer_container_vertical_margin">8dp</dimen>
 </resources>
