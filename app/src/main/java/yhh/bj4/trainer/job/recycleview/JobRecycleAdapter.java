@@ -35,13 +35,14 @@ public class JobRecycleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         LayoutInflater inflater = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE));
         switch (viewType) {
             case VIEW_TYPE_JOB:
-                return new JobViewHolder(inflater.inflate(R.layout.job_view_holder, null));
+                return new JobViewHolder(inflater.inflate(R.layout.base_view_holder, null), inflater.inflate(R.layout.job_view_holder, null));
         }
         return null;
     }
 
     private void bindJobViewHolder(BaseViewHolder holder, int position) {
         JobViewHolder jobViewHolder = (JobViewHolder) holder;
+        jobViewHolder.getBaseTitle().setText("12333333");
     }
 
     @Override
@@ -56,7 +57,7 @@ public class JobRecycleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 5;
     }
 
     @Override

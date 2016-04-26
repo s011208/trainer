@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp">
+
+        <TextView
+            android:id="@+id/base_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_view_title_bar_height"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="@dimen/base_view_holder_title_text_size" />
+
+        <ImageView
+            android:id="@+id/base_function_button"
+            android:layout_width="@dimen/base_view_title_bar_height"
+            android:layout_height="@dimen/base_view_title_bar_height"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_function_button" />
+
+        <View
+            android:id="@+id/base_sep"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/base_title"
+            android:layout_margin="@dimen/base_view_holder_sep_margin" />
+
+        <FrameLayout
+            android:id="@+id/base_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/base_sep"></FrameLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

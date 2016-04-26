@@ -34,7 +34,7 @@ public class JobFragment extends ViewPagerCallbackFragment {
     private void initComponents() {
         mJobRecycleView = (RecyclerView) mRoot.findViewById(R.id.jobs_recycle_view);
         mJobRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mJobRecycleView.setAdapter(new JobRecycleAdapter());
+        mJobRecycleView.setAdapter(new JobRecycleAdapter(getActivity()));
     }
 
     @Override

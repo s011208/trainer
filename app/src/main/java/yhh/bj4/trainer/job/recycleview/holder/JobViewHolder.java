@@ -6,7 +6,7 @@ import android.view.View;
  * Created by User on 2016/4/25.
  */
 public class JobViewHolder extends BaseViewHolder {
-    public JobViewHolder(View itemView) {
-        super(itemView);
+    public JobViewHolder(View baseView, View contentView) {
+        super(baseView, contentView);
     }
 }
