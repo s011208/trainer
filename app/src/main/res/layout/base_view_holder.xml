@@ -25,7 +25,7 @@
             android:layout_width="@dimen/base_view_title_bar_height"
             android:layout_height="@dimen/base_view_title_bar_height"
             android:layout_alignParentRight="true"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             android:src="@drawable/icon_function_button" />
 
         <View
