@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -45,7 +46,13 @@ public class JobRecycleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         ImageJobViewHolder imageJobViewHolder = (ImageJobViewHolder) holder;
         imageJobViewHolder.getBaseView().setBackgroundColor(Color.GREEN);
         imageJobViewHolder.getBaseTitle().setText("12333333");
-        imageJobViewHolder.getImage().setImageResource(R.drawable.calendar_next_arrow);
+        imageJobViewHolder.getImage().setImageResource(R.drawable.icon_camera);
+        imageJobViewHolder.getImage().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         imageJobViewHolder.getIntensity().setText("55555");
         imageJobViewHolder.getDoneTimes().setText("55555");
         imageJobViewHolder.getUndoneTimes().setText("55555");

@@ -82,4 +82,20 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/image_job_view_holder_sub_text_size" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/base_sep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/timer_container"
+        android:layout_margin="@dimen/base_view_holder_sep_margin"
+        android:background="@color/base_view_holder_separator_color" />
+
+    <ViewSwitcher
+        android:id="@+id/timer_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/base_sep">
+
+    </ViewSwitcher>
 </RelativeLayout>

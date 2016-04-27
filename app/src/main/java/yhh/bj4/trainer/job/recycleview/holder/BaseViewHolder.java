@@ -19,10 +19,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder(View baseView, View contentView) {
         super(baseView);
-        mBaseView = baseView;
-        mBaseTitle = (TextView) itemView.findViewById(R.id.base_title);
-        mFunctionButton = (ImageView) itemView.findViewById(R.id.base_function_button);
-        mContentContainer = (FrameLayout) itemView.findViewById(R.id.base_content_container);
+        mBaseView = baseView.findViewById(R.id.base_view);
+        mBaseTitle = (TextView) baseView.findViewById(R.id.base_title);
+        mFunctionButton = (ImageView) baseView.findViewById(R.id.base_function_button);
+        mContentContainer = (FrameLayout) baseView.findViewById(R.id.base_content_container);
         mContentContainer.addView(contentView);
     }
 
