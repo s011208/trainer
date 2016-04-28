@@ -91,12 +91,47 @@
         android:layout_margin="@dimen/base_view_holder_sep_margin"
         android:background="@color/base_view_holder_separator_color" />
 
-    <ViewSwitcher
+    <LinearLayout
         android:id="@+id/timer_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/base_sep">
+        android:layout_below="@+id/base_sep"
+        android:divider="@color/base_view_holder_separator_color"
+        android:dividerPadding="1dp"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
-    </ViewSwitcher>
+        <ImageView
+            android:id="@+id/start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_start" />
+
+        <ImageView
+            android:id="@+id/pause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_pause" />
+
+        <ImageView
+            android:id="@+id/done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_done" />
+
+        <ImageView
+            android:id="@+id/break_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_break_time" />
+    </LinearLayout>
 
 </RelativeLayout>

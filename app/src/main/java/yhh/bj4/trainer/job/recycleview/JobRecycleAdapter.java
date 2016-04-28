@@ -58,6 +58,30 @@ public class JobRecycleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         imageJobViewHolder.getUndoneTimes().setText("55555");
         imageJobViewHolder.getRestTimer().setText("55555");
         imageJobViewHolder.getWorkoutTimer().setText("55555");
+        imageJobViewHolder.getStart().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        imageJobViewHolder.getPause().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        imageJobViewHolder.getDone().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        imageJobViewHolder.getBreakTime().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

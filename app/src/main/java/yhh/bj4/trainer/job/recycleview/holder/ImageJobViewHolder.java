@@ -10,7 +10,7 @@ import yhh.bj4.trainer.R;
  * Created by User on 2016/4/25.
  */
 public class ImageJobViewHolder extends BaseViewHolder {
-    private ImageView mImage;
+    private ImageView mImage, mStart, mPause, mDone, mBreakTime;
     private TextView mIntensity, mUndoneTimes, mDoneTimes;
     private TextView mRestTimer, mWorkoutTimer;
 
@@ -22,6 +22,11 @@ public class ImageJobViewHolder extends BaseViewHolder {
         mUndoneTimes = (TextView) contentView.findViewById(R.id.undone_times);
         mRestTimer = (TextView) contentView.findViewById(R.id.rest_timer);
         mWorkoutTimer = (TextView) contentView.findViewById(R.id.workout_timer);
+
+        mStart = (ImageView) contentView.findViewById(R.id.start);
+        mPause = (ImageView) contentView.findViewById(R.id.pause);
+        mDone = (ImageView) contentView.findViewById(R.id.done);
+        mBreakTime = (ImageView) contentView.findViewById(R.id.break_time);
     }
 
     public ImageView getImage() {
@@ -46,5 +51,21 @@ public class ImageJobViewHolder extends BaseViewHolder {
 
     public TextView getWorkoutTimer() {
         return mWorkoutTimer;
+    }
+
+    public ImageView getStart() {
+        return mStart;
+    }
+
+    public ImageView getPause() {
+        return mPause;
+    }
+
+    public ImageView getBreakTime() {
+        return mBreakTime;
+    }
+
+    public ImageView getDone() {
+        return mDone;
     }
 }
