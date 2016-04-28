@@ -1,5 +1,6 @@
 package yhh.bj4.trainer.job;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,7 +34,18 @@ public class JobFragment extends ViewPagerCallbackFragment {
 
     private void initComponents() {
         mJobRecycleView = (RecyclerView) mRoot.findViewById(R.id.jobs_recycle_view);
-        mJobRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mJobRecycleView.setLayoutManager(llm);
+        mJobRecycleView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            int itemSet = getActivity().getResources().getDimensionPixelSize(R.dimen.job_fragment_recycle_view_inset);
+
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.set(itemSet, itemSet, itemSet, itemSet);
+            }
+        });
         mJobRecycleView.setAdapter(new JobRecycleAdapter(getActivity()));
     }
 

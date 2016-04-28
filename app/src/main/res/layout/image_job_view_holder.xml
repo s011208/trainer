@@ -98,4 +98,5 @@
         android:layout_below="@+id/base_sep">
 
     </ViewSwitcher>
+
 </RelativeLayout>
